@@ -19,27 +19,61 @@ UMLの仕様は膨大なものなので、興味のある方は下記のサイ�
 
 ### AがBを使用する
 
-+ (AがBに依存している)
++ Bの内部関数は静的メソッド
++ 使用(Uses)を表現する場合、点線を用いる。
+    + 点線は`弱い関連性`を表す
++ クラス図
     ```mermaid
     classDiagram
         classDiagram-direction LR
-        A --> B
+        A ..> B: Uses
     ```
 
 + コード例
-
     ```ts
     class A {
         static hello () {
-            // 1.
+            // i.
+            console.log(B.greeting());
+        }
+    }
+    class B {
+        static readonly word: string = 'Hello!';
+        // 静的メソッド
+        static greeting() {
+            return B.word;
+        }
+    }
+
+    // クラスAのhelloを実行
+    A.hello();
+    // 出力: Hello!
+    ```
+    1. クラスBの`greeting`関数を`console.log`する。
+
+### AがBを生成する
+
++ 生成(Creates)を表現する場合、実線を用いる。
+    + 実線は`強い関連性`を表す
++ クラス図
+    ```mermaid
+    classDiagram
+        classDiagram-direction LR
+        A --> B: Creates
+    ```
++ コード例
+    ```ts
+    class A {
+        static hello () {
+            // i.
             const b = new B('Hello!');
-            // 3.
+            // iii.
             console.log(b.greeting)
         }
     }
 
     class B {
-        // 2.
+        // ii.
         constructor(private word:string){}
         // getter
         get greeting () {
@@ -52,7 +86,7 @@ UMLの仕様は膨大なものなので、興味のある方は下記のサイ�
     // --> Hello!
     ```
 
-    1. クラスBのインスタンス生成時に値を渡す
+    1. クラスBをインスタンス生成する。その際に値を渡す
     2. コンストラクタで値を受け取る(wordに代入される)
-    3. インスタンスBのgreetingのゲッターを使ってconsole.logする
+    3. インスタンスBのgreetingのゲッターを使って`console.log`する
 
